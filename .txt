@@ -1,0 +1,42 @@
+Created SQLite Database for easy testing
+Created Users Database and linked it with Bookings
+Created Pydantic Model for Users
+Created Login and Register method for Users
+Created Protected routes for ADMIN and OWNER
+Created Pydantic Model for Bookings
+Created protected route for Owner to view all Users
+Created protected route for Owner to promote or demote any user to ADMIN or USER
+Created protected route for Owner and ADMIN to view all Bookings
+Created demo Owner and Admin to check all Bookings
+
+Put all bookings endpoints on hold
+Create protected routes for Owner to create Restaurants and assign admin to them:
+    1 restaurant = 1 admin
+    no. of restaurant >= no. of admins
+Create protected routes to view, update(update the info abt restaurant or change the admin) and delete Restaurants
+
+
+
+owner@demo.com  : password
+{
+  "id": "d859cfce-dfc8-49d6-bfbc-de6a4fcd14a1",
+  "email": "owner@demo.com",
+  "is_active": true,
+  "is_superuser": false,
+  "is_verified": false,
+  "role": "owner",
+  "active_booking_id": null
+}
+
+admin@demo.com  : password
+{
+  "id": "f6bf0f47-97ca-4234-8aa2-54691bf0a85b",
+  "email": "admin@demo.com",
+  "is_active": true,
+  "is_superuser": false,
+  "is_verified": false,
+  "role": "admin",
+  "active_booking_id": null
+}
+
+user@demo.com   : password
