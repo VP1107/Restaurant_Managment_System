@@ -12,17 +12,26 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 
 @router.get("/me", response_model=UserRead)
-async def read_current_user(db:AsyncSession = Depends(get_async_session), current_user: User = Depends(required_role(required_roles=[UserRole.USER, UserRole.OWNER, UserRole.ADMIN]))):
+async def read_current_user(db:AsyncSession = Depends(get_async_session), 
+    current_user: User = Depends(required_role(required_roles=[UserRole.USER, UserRole.OWNER, UserRole.ADMIN]))):
+
     return current_user
 
 @router.get("/all", response_model=list[UserRead])
-async def read_users(db:AsyncSession = Depends(get_async_session), user: User = Depends(required_role(required_roles=[UserRole.OWNER]))):
+async def read_users(db:AsyncSession = Depends(get_async_session), 
+    user: User = Depends(required_role(required_roles=[UserRole.OWNER]))
+    ):
+    
     result = await db.execute(select(User))
     user_db = result.scalars().all()
     return user_db
 
 @router.get("/{user_id}", response_model=UserRead)
-async def read_user(user_id: uuid.UUID, db:AsyncSession = Depends(get_async_session), user: User = Depends(required_role(required_roles=[UserRole.OWNER]))):
+async def read_user(user_id: uuid.UUID, 
+    db:AsyncSession = Depends(get_async_session), 
+    user: User = Depends(required_role(required_roles=[UserRole.OWNER]))
+    ):
+    
     result = await db.execute(select(User).filter(User.id == user_id))
     user_db = result.scalar_one_or_none()
     if not user_db:
@@ -31,7 +40,11 @@ async def read_user(user_id: uuid.UUID, db:AsyncSession = Depends(get_async_sess
 
 
 @router.patch("/change-role/{user_id}", response_model=UserRead)
-async def change_user_role(user_id: uuid.UUID, user_update: UserUpdate, db:AsyncSession = Depends(get_async_session), user: User = Depends(required_role(required_roles=[UserRole.OWNER]))):
+async def change_user_role(user_id: uuid.UUID, 
+    user_update: UserUpdate, db:AsyncSession = Depends(get_async_session), 
+    user: User = Depends(required_role(required_roles=[UserRole.OWNER]))
+    ):
+    
     result = await db.execute(select(User).filter(User.id == user_id))
     user_db = result.scalar_one_or_none()
     if not user_db:
@@ -50,7 +63,8 @@ async def delete_user(
     user_id: uuid.UUID,
     db: AsyncSession = Depends(get_async_session),
     current_user: User = Depends(required_role(required_roles=[UserRole.OWNER]))
-):
+    ):
+    
     result = await db.execute(select(User).where(User.id == user_id))
     user_db = result.scalar_one_or_none()
     if not user_db:
