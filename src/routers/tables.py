@@ -45,8 +45,6 @@ async def create_table(table: TableCreate,
     if not restaurant:
         raise HTTPException(status_code=404, detail="Restaurant not found")
     
-    new_table = Table(**table.model_dump())
-    
     existing = await session.execute(
         select(Table.same_type_tables).where(
             Table.restaurant_id == table.restaurant_id,

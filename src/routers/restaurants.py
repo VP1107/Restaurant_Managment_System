@@ -68,6 +68,13 @@ async def update_restaurant(restaurant_id: int, restaurant: RestaurantUpdate,
         raise HTTPException(status_code=404, detail="Restaurant not found")
 
     if restaurant.admin_id and restaurant.admin_id != existing_restaurant.admin_id:
+        result_user = await session.execute(select(User).where(User.id == restaurant.admin_id))
+        admin_user = result_user.scalar_one_or_none()
+        if not admin_user:
+            raise HTTPException(status_code=404, detail="Admin user not found")
+        if admin_user.role != UserRole.ADMIN:
+            raise HTTPException(status_code=400, detail="User must have ADMIN role")
+            
         existing_admin = await session.execute(select(Restaurant).where(Restaurant.admin_id == restaurant.admin_id))
         if existing_admin.scalar_one_or_none():
             raise HTTPException(status_code=400, detail="Admin user is already assigned to another restaurant")

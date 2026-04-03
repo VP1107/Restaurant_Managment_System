@@ -30,6 +30,7 @@ class User(Base, SQLAlchemyBaseUserTableUUID):
     role = Column(Enum(UserRole), default=UserRole.USER, nullable=False)
     
     bookings = relationship("Booking", back_populates="user", foreign_keys="Booking.user_id")
+    restaurants = relationship("Restaurant", back_populates="admin", foreign_keys="Restaurant.admin_id")
 
 
 class Restaurant(Base):

@@ -4,9 +4,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import uuid
 
 from src.db import get_async_session
-from src.models import User, UserRole
+from src.models import User, UserRole, Restaurant
 from src.services import required_role
 from src.schemas import UserRead, UserUpdate
+
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -72,5 +73,10 @@ async def delete_user(
         raise HTTPException(status_code=404, detail="User not found")
     if user_db.role == UserRole.OWNER:
         raise HTTPException(status_code=400, detail="Cannot delete an owner")
+        
+    restaurant_check = await db.execute(select(Restaurant).where(Restaurant.admin_id == user_id))
+    if restaurant_check.scalar_one_or_none():
+        raise HTTPException(status_code=400, detail="Cannot delete an admin user who is currently managing a restaurant")
+        
     await db.delete(user_db)
     await db.commit()
