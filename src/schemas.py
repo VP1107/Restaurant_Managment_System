@@ -61,11 +61,6 @@ class TableCreate(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-class TableUpdate(BaseModel):
-    capacity: TableType | None = None
-
-    model_config = ConfigDict(from_attributes=True)
-
 
 # Schemas for Booking
 class BookingRead(BaseModel):
