@@ -52,7 +52,8 @@ async def change_user_role(user_id: uuid.UUID,
     if user_db.role == UserRole.OWNER:
         raise HTTPException(status_code=400, detail="Cannot change the role of an owner")
     
-    user_db.role = user_update.role
+    if user_update.role is not None:
+        user_db.role = user_update.role
     db.add(user_db)
     await db.commit()
     await db.refresh(user_db)

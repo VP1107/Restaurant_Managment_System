@@ -1,4 +1,10 @@
-from src.models import User, UserRole
+
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.db import get_async_session
+from src.models import Restaurant, User, UserRole
 from fastapi import Depends, HTTPException, status
 
 from src.auth import current_active_user
