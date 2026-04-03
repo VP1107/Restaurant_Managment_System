@@ -8,12 +8,11 @@ Created protected route for Owner to view all Users
 Created protected route for Owner to promote or demote any user to ADMIN or USER
 Created protected route for Owner and ADMIN to view all Bookings
 Created demo Owner and Admin to check all Bookings
-
-Put all bookings endpoints on hold
 Create protected routes for Owner to create Restaurants and assign admin to them:
     1 restaurant = 1 admin
     no. of restaurant >= no. of admins
 Create protected routes to view, update(update the info abt restaurant or change the admin) and delete Restaurants
+Created Table CRUD operations
 
 
 

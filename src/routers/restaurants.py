@@ -46,6 +46,10 @@ async def create_restaurant(restaurant: RestaurantCreate,
             raise HTTPException(status_code=404, detail="Admin user not found")
         if admin_user.role != UserRole.ADMIN:
             raise HTTPException(status_code=400, detail="Admin user must have ADMIN role")
+    
+    existing_admin = await session.execute(select(Restaurant).where(Restaurant.admin_id == new_restaurant.admin_id))
+    if existing_admin.scalar_one_or_none():
+        raise HTTPException(status_code=400, detail="Admin user is already assigned to another restaurant")
                 
     session.add(new_restaurant)
     await session.commit()
@@ -64,6 +68,10 @@ async def update_restaurant(restaurant_id: uuid.UUID, restaurant: RestaurantCrea
     if not existing_restaurant:
         raise HTTPException(status_code=404, detail="Restaurant not found")
 
+    existing_admin = await session.execute(select(Restaurant).where(Restaurant.admin_id == existing_restaurant.admin_id))
+    if existing_admin.scalar_one_or_none():
+        raise HTTPException(status_code=400, detail="Admin user is already assigned to another restaurant")
+    
     for field, value in restaurant.model_dump().items():
         setattr(existing_restaurant, field, value)
 

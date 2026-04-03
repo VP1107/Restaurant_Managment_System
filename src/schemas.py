@@ -85,7 +85,6 @@ class BookingUpdate(BaseModel):
     start_time: datetime | None = None
     table_type: TableType | None = None
 
-
     model_config = ConfigDict(from_attributes=True)
 
 class BookingStatusUpdate(BaseModel):
