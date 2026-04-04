@@ -1,40 +1,69 @@
+import os
 import uuid
 from typing import Optional
+
 from fastapi import Depends, Request
-from fastapi_users import FastAPIUsers, BaseUserManager, UUIDIDMixin, models
-from fastapi_users.authentication import AuthenticationBackend, BearerTransport, JWTStrategy
+from fastapi_users import FastAPIUsers, BaseUserManager, UUIDIDMixin
+from fastapi_users.authentication import (
+    AuthenticationBackend,
+    BearerTransport,
+    JWTStrategy,
+)
 from fastapi_users.db import SQLAlchemyUserDatabase
 
 from src.db import get_user_db
 from src.models import User
 
-SECRET_KEY = "MySuperSecretKey"
+
+SECRET_KEY = os.environ.get("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError(
+        "SECRET_KEY environment variable is not set. "
+        "Set it to a long random string before starting the server."
+    )
+
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     reset_password_token_secret = SECRET_KEY
     verification_token_secret = SECRET_KEY
 
-    async def on_after_register(self, user: User, request: Optional[Request] = None):
+    async def on_after_register(
+        self, user: User, request: Optional[Request] = None
+    ):
         print(f"User {user.id} has registered.")
-    
-    async def on_after_forgot_password(self, user: User, token: str, request: Optional[Request] = None):
-        print(f"User {user.id} has forgot their password. Reset token: {token}")
-    
-    async def on_after_request_verify(self, user: User, token: str, request: Optional[Request] = None):
-        print(f"User {user.id} has requested verification. Verification token: {token}")
+
+    async def on_after_forgot_password(
+        self, user: User, token: str, request: Optional[Request] = None
+    ):
+        print(
+            f"User {user.id} has forgot their password. Reset token: {token}"
+        )
+
+    async def on_after_request_verify(
+        self, user: User, token: str, request: Optional[Request] = None
+    ):
+        print(
+            f"User {user.id} has requested verification. "
+            f"Verification token: {token}"
+        )
 
 
-async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
+async def get_user_manager(
+    user_db: SQLAlchemyUserDatabase = Depends(get_user_db),
+):
     yield UserManager(user_db)
 
-Bearer_Transport = BearerTransport(tokenUrl="auth/jwt/login")
 
-def get_jwt_strategy():
+bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
+
+
+def get_jwt_strategy() -> JWTStrategy:
     return JWTStrategy(secret=SECRET_KEY, lifetime_seconds=3600)
+
 
 auth_backend = AuthenticationBackend(
     name="jwt",
-    transport=Bearer_Transport,
+    transport=bearer_transport,
     get_strategy=get_jwt_strategy,
 )
 

@@ -1,7 +1,7 @@
 from fastapi_users import schemas
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
 from src.models import UserRole, BookingStatus, TableType
 
@@ -79,7 +79,19 @@ class BookingCreate(BaseModel):
     table_type: TableType
     restaurant_id: int
 
+
+    @field_validator("start_time")
+    @classmethod
+    def must_be_timezone_aware(cls, v: datetime) -> datetime:
+        if v.tzinfo is None:
+            raise ValueError(
+                "start_time must include timezone information, "
+                "e.g. '2026-04-10T19:30:00+05:30'"
+            )
+        return v.astimezone(timezone.utc)
+    
     model_config = ConfigDict(from_attributes=True)
+
 
 class BookingUpdate(BaseModel): 
     start_time: datetime | None = None

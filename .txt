@@ -13,6 +13,14 @@ Create protected routes for Owner to create Restaurants and assign admin to them
     no. of restaurant >= no. of admins
 Create protected routes to view, update(update the info abt restaurant or change the admin) and delete Restaurants
 Created Table CRUD operations
+Error Checkers:
+Is restaurant open at the that time?
+Does that type of table exists?
+Is requested ime in future?(Past time not allowed)
+Does the user already have an active booking at that restaurant?
+
+Is these availability?(with lock(use .with_for_update()))
+Create booking
 
 
 
