@@ -1,7 +1,7 @@
 from fastapi_users import schemas
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, time, timezone
 
 from src.models import UserRole, BookingStatus, TableType
 
@@ -21,26 +21,26 @@ class RestaurantRead(BaseModel):
     id: int
     name: str
     location: str
-    opening_time: datetime
-    closing_time: datetime
-    admin_id: uuid.UUID
+    opening_time: time
+    closing_time: time
+    admin_id: uuid.UUID | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
 class RestaurantCreate(BaseModel):
     name: str
     location: str
-    opening_time: datetime
-    closing_time: datetime
-    admin_id: uuid.UUID
+    opening_time: time
+    closing_time: time
+    admin_id: uuid.UUID | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
 class RestaurantUpdate(BaseModel):
     name: str | None = None
     location: str | None = None
-    opening_time: datetime | None = None
-    closing_time: datetime | None = None
+    opening_time: time | None = None
+    closing_time: time | None = None
     admin_id: uuid.UUID | None = None
 
     model_config = ConfigDict(from_attributes=True)

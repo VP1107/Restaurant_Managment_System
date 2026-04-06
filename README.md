@@ -11,6 +11,7 @@ A FastAPI-based REST API for managing restaurant table bookings. Supports multip
 - [Setup](#setup)
 - [Environment Variables](#environment-variables)
 - [Running the Server](#running-the-server)
+- [Database Seeding](#database-seeding)
 - [Authentication](#authentication)
 - [User Roles](#user-roles)
 - [API Endpoints](#api-endpoints)
@@ -99,6 +100,21 @@ uvicorn main:app --reload
 The API will be available at `http://localhost:8000`.
 
 Interactive docs are at `http://localhost:8000/docs`.
+
+---
+
+## Database Seeding
+
+A script to seed the database with demo data is provided. Run the following command from the project root:
+
+```bash
+python seed_db.py
+```
+
+This will create:
+- Three demo users: `user@demo.com`, `admin@demo.com`, and `owner@demo.com` (passwords for all are set to `"password"`).
+- 5 mock restaurants assigned to the admin user.
+- 15-20 randomized tables for each restaurant.
 
 ---
 

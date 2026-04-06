@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Column, Integer, Time, ForeignKey, String, Uuid, Enum
+from sqlalchemy import Column, DateTime, Integer, Time, ForeignKey, String, Uuid, Enum
 from sqlalchemy.orm import DeclarativeBase, relationship
 from fastapi_users.db import SQLAlchemyBaseUserTableUUID
 
@@ -66,8 +66,8 @@ class Booking(Base):
     user_id = Column(Uuid, ForeignKey("user.id"), nullable=False)
     table_type = Column(Enum(TableType), nullable=False)
     restaurant_id = Column(Integer, ForeignKey("restaurants.id"), nullable=False)
-    start_time = Column(Time, nullable=False)
-    end_time = Column(Time, nullable=False)
+    start_time = Column(DateTime, nullable=False)
+    end_time = Column(DateTime, nullable=False)
     status = Column(Enum(BookingStatus), default=BookingStatus.PENDING, nullable=False)
 
     user = relationship("User", back_populates="bookings", foreign_keys=[user_id])
